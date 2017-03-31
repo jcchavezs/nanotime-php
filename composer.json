@@ -1,0 +1,19 @@
+{
+    "name": "jcchavezs/nanotime",
+    "description": "An abstraction for nanotime in PHP.",
+    "type": "library",
+    "license": "GPLv3.0",
+    "authors": [
+        {
+            "name": "José Carlos Chávez",
+            "email": "jcchavezs@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require-dev": {
+        "phpunit/phpunit": "^6.0"
+    },
+    "autoload": {
+        "psr-4": {"Nanotime\\": "src/Nanotime"}
+    }
+}
