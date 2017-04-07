@@ -4,47 +4,54 @@ namespace Nanotime;
 
 final class Nanotime
 {
-    const MICRO_FACTOR = 1000000;
-    const NANO_FACTOR = 1000000000;
-    const MICRO_TO_NANO_FACTOR = 1000;
+    private $mseconds;
+    private $seconds;
 
-    private $microtime;
+    const MICRO_DECIMAL_DIGITS = 6;
+    const NANO_DECIMAL_DIGITS = 9;
 
-    private function __construct($microtime)
+    private function __construct($seconds, $mseconds)
     {
-        $this->microtime = $microtime;
+        $this->seconds = $seconds;
+        $this->mseconds = $mseconds;
     }
 
     public static function now()
     {
-        $microtime = microtime(true);
-        return new self($microtime);
+        $microtime = microtime();
+        list($mseconds, $seconds) = explode(" ", $microtime);
+        return new self($seconds, substr($mseconds, 2));
     }
 
     public function nanotime()
     {
-        return $this->microtime * self::NANO_FACTOR;
+        return (int) $this->nanotimeAsString();
     }
 
     public function microtime()
     {
-        return $this->microtime;
+        return (int) ($this->seconds . substr($this->mseconds, 0, self::MICRO_DECIMAL_DIGITS));
     }
 
     public function time()
     {
-        return (int) ($this->microtime / self::MICRO_FACTOR);
+        return (int) $this->seconds;
     }
 
     public function diff(Nanotime $nanotime)
     {
         return NanotimeInterval::create(
-            ($this->microtime - $nanotime->microtime) / self::MICRO_TO_NANO_FACTOR
+            $this->nanotime() - $nanotime->nanotime()
         );
     }
 
     public function __toString()
     {
-        return (string) ($this->microtime * self::NANO_FACTOR);
+        return (string) $this->nanotimeAsString();
+    }
+
+    private function nanotimeAsString()
+    {
+        return ($this->seconds . str_pad($this->mseconds, self::NANO_DECIMAL_DIGITS,  "0"));
     }
 }

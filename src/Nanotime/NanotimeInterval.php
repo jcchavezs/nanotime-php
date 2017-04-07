@@ -31,7 +31,7 @@ final class NanotimeInterval
 
     public function microtime()
     {
-        return (int) ($this->nanotimeInterval / self::MICRO_TO_NANO_FACTOR);
+        return ($this->nanotimeInterval / self::MICRO_TO_NANO_FACTOR);
     }
 
     public function __toString()
