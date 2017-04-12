@@ -9,9 +9,15 @@ use PHPUnit\Framework\TestCase;
 
 final class NanotimeIntervalTest extends TestCase
 {
-    const HUNDRED_SECONDS_IN_TIME = 100;
-    const HUNDRED_SECONDS_IN_MICROTIME = 1000000000;
-    const HUNDRED_SECONDS_IN_NANOTIME = 1000000000000;
+    const TEN_NANOSECONDS_IN_SECONDS = 0;
+    const TEN_NANOSECONDS_IN_MICROSECONDS = 0;
+    const TEN_NANOSECONDS_IN_NANOSECONDS = 10;
+    const TEN_MICROSECONDS_IN_NANOSECONDS = 10000;
+    const TEN_MICROSECONDS_IN_MICROSECONDS = 10;
+    const TEN_MICROSECONDS_IN_SECONDS = 0;
+    const TEN_SECONDS_IN_NANOSECONDS = 10000000000;
+    const TEN_SECONDS_IN_MICROSECONDS = 10000000;
+    const TEN_SECONDS_IN_SECONDS = 10;
 
     public function testNanotimeIntervalFailsOnCreation()
     {
@@ -24,15 +30,39 @@ final class NanotimeIntervalTest extends TestCase
         NanotimeInterval::create($startNanotime, $endNanotime);
     }
 
-    public function testNanotimeIntervalIsCreatedSuccessfully()
+    public function testNanotimeIntervalIsCreatedSuccessfullyWithNanosecondsInDifference()
     {
         $startNanotime = Nanotime::create('1257894000000000000');
-        $endNanotime =   Nanotime::create('1257895000000000000');
+        $endNanotime =   Nanotime::create('1257894000000000010');
 
         NanotimeInterval::create($startNanotime, $endNanotime);
 
-        $this->assertEquals(self::HUNDRED_SECONDS_IN_NANOTIME, $endNanotime->diff($startNanotime)->nanotime());
-        $this->assertEquals(self::HUNDRED_SECONDS_IN_MICROTIME, $endNanotime->diff($startNanotime)->microtime());
-        $this->assertEquals(self::HUNDRED_SECONDS_IN_TIME, $endNanotime->diff($startNanotime)->time());
+        $this->assertEquals(self::TEN_NANOSECONDS_IN_NANOSECONDS, $endNanotime->diff($startNanotime)->nanotime());
+        $this->assertEquals(self::TEN_NANOSECONDS_IN_MICROSECONDS, $endNanotime->diff($startNanotime)->microtime());
+        $this->assertEquals(self::TEN_NANOSECONDS_IN_SECONDS, $endNanotime->diff($startNanotime)->time());
+    }
+
+    public function testNanotimeIntervalIsCreatedSuccessfullyWithMicrosecondsInDifference()
+    {
+        $startNanotime = Nanotime::create('1257894000000000000');
+        $endNanotime =   Nanotime::create('1257894000000010000');
+
+        NanotimeInterval::create($startNanotime, $endNanotime);
+
+        $this->assertEquals(self::TEN_MICROSECONDS_IN_NANOSECONDS, $endNanotime->diff($startNanotime)->nanotime());
+        $this->assertEquals(self::TEN_MICROSECONDS_IN_MICROSECONDS, $endNanotime->diff($startNanotime)->microtime());
+        $this->assertEquals(self::TEN_MICROSECONDS_IN_SECONDS, $endNanotime->diff($startNanotime)->time());
+    }
+
+    public function testNanotimeIntervalIsCreatedSuccessfullyWithSecondsInDifference()
+    {
+        $startNanotime = Nanotime::create('1257894000000000000');
+        $endNanotime =   Nanotime::create('1257894010000000000');
+
+        NanotimeInterval::create($startNanotime, $endNanotime);
+
+        $this->assertEquals(self::TEN_SECONDS_IN_NANOSECONDS, $endNanotime->diff($startNanotime)->nanotime());
+        $this->assertEquals(self::TEN_SECONDS_IN_MICROSECONDS, $endNanotime->diff($startNanotime)->microtime());
+        $this->assertEquals(self::TEN_SECONDS_IN_SECONDS, $endNanotime->diff($startNanotime)->time());
     }
 }
