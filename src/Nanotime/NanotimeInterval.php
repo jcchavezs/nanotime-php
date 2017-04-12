@@ -6,7 +6,7 @@ use Nanotime\Exceptions\InvalidNanotimeInterval;
 
 final class NanotimeInterval
 {
-    const TO_NANO_FACTOR = 10000000000;
+    const TO_NANO_FACTOR = 1000000000;
     const FROM_MICRO_TO_NANO_FACTOR = 1000;
     const NO_DECIMAL_PRECISION = 0;
 
@@ -35,12 +35,12 @@ final class NanotimeInterval
 
     public function microtime()
     {
-        return round($this->nInterval / self::FROM_MICRO_TO_NANO_FACTOR, self::NO_DECIMAL_PRECISION, PHP_ROUND_HALF_UP);
+        return (int) round($this->nInterval / self::FROM_MICRO_TO_NANO_FACTOR, self::NO_DECIMAL_PRECISION, PHP_ROUND_HALF_UP);
     }
 
     public function time()
     {
-        return round($this->nInterval / self::TO_NANO_FACTOR, self::NO_DECIMAL_PRECISION, PHP_ROUND_HALF_UP);
+        return (int) round($this->nInterval / self::TO_NANO_FACTOR, self::NO_DECIMAL_PRECISION, PHP_ROUND_HALF_UP);
     }
 
     public function __toString()
