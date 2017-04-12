@@ -2,6 +2,8 @@
 
 namespace Nanotime;
 
+use Nanotime\Exceptions\InvalidNanotime;
+
 final class Nanotime
 {
     private $mseconds;
@@ -23,6 +25,17 @@ final class Nanotime
         return new self($seconds, substr($mseconds, 2));
     }
 
+    public static function create($nanotime)
+    {
+        if (!is_numeric($nanotime)) {
+            throw InvalidNanotime::withNanotime($nanotime);
+        }
+
+        $seconds = substr($nanotime, 0, - self::NANO_DECIMAL_DIGITS);
+        $mseconds = substr($nanotime, - self::NANO_DECIMAL_DIGITS);
+        return new self($seconds, $mseconds);
+    }
+
     public function nanotime()
     {
         return (int) $this->nanotimeAsString();
@@ -40,9 +53,7 @@ final class Nanotime
 
     public function diff(Nanotime $nanotime)
     {
-        return NanotimeInterval::create(
-            $this->nanotime() - $nanotime->nanotime()
-        );
+        return NanotimeInterval::create($nanotime, $this);
     }
 
     public function __toString()
