@@ -1,12 +1,15 @@
 <?php
 
-namespace Tests\Unit;
+namespace NanotimeTests\Unit;
 
 use Nanotime\Exceptions\InvalidNanotimeInterval;
 use Nanotime\Nanotime;
 use Nanotime\NanotimeInterval;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers NanotimeInterval
+ */
 final class NanotimeIntervalTest extends TestCase
 {
     const TEN_NANOSECONDS_IN_SECONDS = 0;

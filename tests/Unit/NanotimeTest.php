@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace NanotimeTests\Unit;
 
 use Nanotime\Nanotime;
 use PHPUnit\Framework\TestCase;
