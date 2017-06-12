@@ -68,4 +68,35 @@ final class NanotimeIntervalTest extends TestCase
         $this->assertEquals(self::TEN_SECONDS_IN_MICROSECONDS, $endNanotime->diff($startNanotime)->microtime());
         $this->assertEquals(self::TEN_SECONDS_IN_SECONDS, $endNanotime->diff($startNanotime)->time());
     }
+
+    /**
+     * @dataProvider nanointernvalDifferences
+     */
+    public function testNanotimeIntervals($endNanotimestamp, $startNanotimestamp, $diff)
+    {
+        $startNanotime = Nanotime::create($startNanotimestamp);
+        $endNanotime =   Nanotime::create($endNanotimestamp);
+
+        NanotimeInterval::create($startNanotime, $endNanotime);
+
+        $this->assertEquals($diff, $endNanotime->diff($startNanotime)->nanotime());
+    }
+
+    public function nanointernvalDifferences()
+    {
+        return [
+            ['1257894000000000000', '1257893000000000001', 999999999999],
+            ['1257894000000000000', '1257893000000000010', 999999999990],
+            ['1257894000000000000', '1257893000000000100', 999999999900],
+            ['1257894000000000000', '1257893000000001000', 999999999000],
+            ['1257894000000000000', '1257893000000010000', 999999990000],
+            ['1257894000000000000', '1257893000000100000', 999999900000],
+            ['1257894000000000000', '1257893000001000000', 999999000000],
+            ['1257894000000000000', '1257893000010000000', 999990000000],
+            ['1257894000000000000', '1257893000100000000', 999900000000],
+            ['1257894000000000000', '1257893001000000000', 999000000000],
+            ['1257894000000000000', '1257893010000000000', 990000000000],
+            ['1257894000000000000', '1257893100000000000', 900000000000],
+        ];
+    }
 }
