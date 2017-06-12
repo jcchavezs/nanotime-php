@@ -2,6 +2,7 @@
 
 namespace Nanotime;
 
+use DateTimeInterface;
 use Nanotime\Exceptions\InvalidNanotime;
 
 final class Nanotime
@@ -27,13 +28,24 @@ final class Nanotime
 
     public static function create($nanotime)
     {
-        if (!is_numeric($nanotime)) {
-            throw InvalidNanotime::withNanotime($nanotime);
+        $seconds = null;
+        $mseconds = null;
+
+        if ($nanotime instanceof DateTimeInterface) {
+            $seconds = $nanotime->format("U");
+            $mseconds = $nanotime->format("u");
+        } else if ($nanotime === (float) $nanotime && strlen($nanotime) === 17) {
+            list($seconds, $mseconds) = explode('.', $nanotime);
+        } if (is_numeric($nanotime) && strlen($nanotime) === 19) {
+            $seconds = substr($nanotime, 0, - self::NANO_DECIMAL_DIGITS);
+            $mseconds = substr($nanotime, - self::NANO_DECIMAL_DIGITS);
         }
 
-        $seconds = substr($nanotime, 0, - self::NANO_DECIMAL_DIGITS);
-        $mseconds = substr($nanotime, - self::NANO_DECIMAL_DIGITS);
-        return new self($seconds, $mseconds);
+        if ($seconds != null && $mseconds != null) {
+            return new self($seconds, $mseconds);
+        }
+
+        throw InvalidNanotime::withNanotime($nanotime);
     }
 
     public function nanotime()
